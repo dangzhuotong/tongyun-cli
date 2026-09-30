@@ -28,7 +28,7 @@ export type KnownApi =
 
 export type Api = KnownApi | (string & {});
 
-export type KnownImageApi = "openrouter-images";
+export type KnownImageApi = "openrouter-images" | "kie-images";
 
 export type ImageApi = KnownImageApi | (string & {});
 
@@ -39,6 +39,7 @@ export type ClassifierApi = KnownClassifierApi | (string & {});
 export type KnownProvider =
 	| "amazon-bedrock"
 	| "ant-ling"
+	| "kie"
 	| "anthropic"
 	| "google"
 	| "google-vertex"

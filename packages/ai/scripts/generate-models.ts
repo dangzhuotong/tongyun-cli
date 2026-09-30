@@ -3165,6 +3165,82 @@ async function generateModels() {
 	];
 	allModels.push(...antLingModels);
 
+	const kieCompat: OpenAICompletionsCompat = {
+		supportsStore: false,
+		supportsDeveloperRole: false,
+		supportsReasoningEffort: false,
+		maxTokensField: "max_tokens",
+		supportsLongCacheRetention: false,
+	};
+	const kieModels: Model<"openai-completions">[] = [
+		{
+			id: "gpt-6-astra",
+			name: "GPT-6 Astra (Kie)",
+			api: "openai-completions",
+			baseUrl: "https://api.kie.ai/v1",
+			provider: "kie",
+			reasoning: true,
+			input: ["text", "image"],
+			cost: { input: 5, output: 25, cacheRead: 1.25, cacheWrite: 0 },
+			contextWindow: 200000,
+			maxTokens: 32768,
+			compat: kieCompat,
+		},
+		{
+			id: "grok-4-7",
+			name: "Grok 4.7 (Kie)",
+			api: "openai-completions",
+			baseUrl: "https://api.kie.ai/v1",
+			provider: "kie",
+			reasoning: true,
+			input: ["text", "image"],
+			cost: { input: 3, output: 15, cacheRead: 0.75, cacheWrite: 0 },
+			contextWindow: 131072,
+			maxTokens: 16384,
+			compat: kieCompat,
+		},
+		{
+			id: "grok-4-6",
+			name: "Grok 4.6 (Kie)",
+			api: "openai-completions",
+			baseUrl: "https://api.kie.ai/v1",
+			provider: "kie",
+			reasoning: false,
+			input: ["text", "image"],
+			cost: { input: 2, output: 10, cacheRead: 0.5, cacheWrite: 0 },
+			contextWindow: 131072,
+			maxTokens: 16384,
+			compat: kieCompat,
+		},
+		{
+			id: "deepseek-v4-1-flash",
+			name: "DeepSeek V4.1 Flash (Kie)",
+			api: "openai-completions",
+			baseUrl: "https://api.kie.ai/v1",
+			provider: "kie",
+			reasoning: true,
+			input: ["text", "image"],
+			cost: { input: 0.3, output: 1.2, cacheRead: 0.006, cacheWrite: 0 },
+			contextWindow: 1000000,
+			maxTokens: 384000,
+			compat: { ...kieCompat, thinkingFormat: "deepseek" },
+		},
+		{
+			id: "kimi-k3",
+			name: "Kimi K3 (Kie)",
+			api: "openai-completions",
+			baseUrl: "https://api.kie.ai/v1",
+			provider: "kie",
+			reasoning: true,
+			input: ["text", "image"],
+			cost: { input: 1, output: 4, cacheRead: 0.15, cacheWrite: 0 },
+			contextWindow: 1000000,
+			maxTokens: 65536,
+			compat: kieCompat,
+		},
+	];
+	allModels.push(...kieModels);
+
 	for (const candidate of allModels) {
 		if (
 			candidate.api === "openai-completions" &&
@@ -3446,6 +3522,56 @@ async function generateModels() {
 		applyImageInputMetadata(model);
 		providers[model.provider] ??= { chat: {}, image: {}, classifier: {} };
 		providers[model.provider].image[model.id] ??= model;
+	}
+	const kieImageModels: ImageModel<ImageApi>[] = [
+		{
+			id: "google/nanobanana2",
+			name: "Google - Nano Banana 2",
+			api: "kie-images",
+			baseUrl: "https://api.kie.ai",
+			provider: "kie",
+			type: "image",
+			input: ["text"],
+			output: ["image"],
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		},
+		{
+			id: "google/pro-image-to-image",
+			name: "Nano Banana Pro (Image to Image)",
+			api: "kie-images",
+			baseUrl: "https://api.kie.ai",
+			provider: "kie",
+			type: "image",
+			input: ["text", "image"],
+			output: ["image"],
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		},
+		{
+			id: "gpt/gpt-image-2-5-sunburst-text-to-image",
+			name: "GPT Image 2.5 Sunburst (Text to Image)",
+			api: "kie-images",
+			baseUrl: "https://api.kie.ai",
+			provider: "kie",
+			type: "image",
+			input: ["text"],
+			output: ["image"],
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		},
+		{
+			id: "gpt/gpt-image-2-5-sunburst-image-to-image",
+			name: "GPT Image 2.5 Sunburst (Image to Image)",
+			api: "kie-images",
+			baseUrl: "https://api.kie.ai",
+			provider: "kie",
+			type: "image",
+			input: ["text", "image"],
+			output: ["image"],
+			cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0 },
+		},
+	];
+	for (const model of kieImageModels) {
+		providers[model.provider] ??= { chat: {}, image: {}, classifier: {} };
+		providers[model.provider].image[model.id] = model;
 	}
 	const classifierModels: ClassifierModel<ClassifierApi>[] = [
 		...modelsDevClassifierModels,

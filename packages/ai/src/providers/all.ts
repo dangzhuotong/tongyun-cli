@@ -17,6 +17,7 @@ import { googleProvider } from "./google.ts";
 import { googleVertexProvider } from "./google-vertex.ts";
 import { groqProvider } from "./groq.ts";
 import { huggingfaceProvider } from "./huggingface.ts";
+import { kieProvider } from "./kie.ts";
 import { kimiCodingProvider } from "./kimi-coding.ts";
 import { metaProvider } from "./meta.ts";
 import { minimaxProvider } from "./minimax.ts";
@@ -151,6 +152,7 @@ export function builtinProviders(): Provider[] {
 		groqProvider(),
 		huggingfaceProvider(),
 		kimiCodingProvider(),
+		kieProvider(),
 		metaProvider(),
 		minimaxProvider(),
 		minimaxCnProvider(),
